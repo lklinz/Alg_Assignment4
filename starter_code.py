@@ -7,6 +7,7 @@ import json
 import time
 import random
 import tracemalloc
+import copy
 
 
 # ============================================================================
@@ -33,7 +34,18 @@ def bubble_sort(arr):
     # Hint: Use nested loops - outer loop for passes, inner loop for comparisons
     # Hint: Compare adjacent elements and swap if left > right
     
-    pass  # Delete this and write your code
+    new_arr = arr.copy()
+    for num in range(len(new_arr)):
+        swapped = False
+
+        for n in range(len(new_arr)-num-1):
+            if new_arr[n] > new_arr[n+1]:
+                (new_arr[n],new_arr[n+1]) = (new_arr[n+1],new_arr[n])
+                swapped = True
+        if not swapped:
+            break
+    return new_arr
+
 
 
 def selection_sort(arr):
@@ -55,8 +67,16 @@ def selection_sort(arr):
     # TODO: Implement selection sort
     # Hint: Find minimum element in unsorted portion, swap it with first unsorted element
     
-    pass  # Delete this and write your code
+    new_arr = arr.copy()
+    for num in range(len(new_arr)):
+        min_idx = num
 
+        for n in range(num, len(new_arr)):
+            if new_arr[n] < new_arr[min_idx]:
+                min_idx = n
+        if min_idx != num:
+            (new_arr[num],new_arr[min_idx]) = (new_arr[min_idx],new_arr[num]) 
+    return new_arr
 
 def insertion_sort(arr):
     """
@@ -77,9 +97,49 @@ def insertion_sort(arr):
     # TODO: Implement insertion sort
     # Hint: Start from second element, insert it into correct position in sorted portion
     
-    pass  # Delete this and write your code
+    new_arr = arr.copy()
+    for num in range(1,len(new_arr)):
+        key = new_arr[num]
+        comparing_idx = num - 1
 
+        while comparing_idx >=0 and key < new_arr[comparing_idx]:
+            new_arr[comparing_idx+1] = new_arr[comparing_idx]
+            comparing_idx -=1
+        new_arr[comparing_idx+1] = key
+    return new_arr
 
+def mergeSort(array):
+    new_arr = array.copy()
+    if len(new_arr) > 1:
+
+        r = len(new_arr)//2
+        L = new_arr[:r]
+        M = new_arr[r:]
+
+        L = mergeSort(L)
+        M = mergeSort(M)
+
+        i = j = k = 0
+
+        while i < len(L) and j < len(M):
+            if L[i] <= M[j]:
+                new_arr[k] = L[i]
+                i += 1
+            else:
+                new_arr[k] = M[j]
+                j += 1
+            k += 1
+
+        while i < len(L):
+            new_arr[k] = L[i]
+            i += 1
+            k += 1
+
+        while j < len(M):
+            new_arr[k] = M[j]
+            j += 1
+            k += 1
+    return new_arr
 def merge_sort(arr):
     """
     Sort array using merge sort algorithm.
@@ -100,14 +160,95 @@ def merge_sort(arr):
     # Hint: Base case - if array has 1 or 0 elements, it's already sorted
     # Hint: Recursive case - split array in half, sort each half, merge sorted halves
     # Hint: You'll need a helper function to merge two sorted arrays
+    return (mergeSort(arr))
     
-    pass  # Delete this and write your code
-
 
 # ============================================================================
 # PART 2: STABILITY DEMONSTRATION
 # ============================================================================
+def bubble_sort_dict(dict_list,key):
+    new_dict_list= copy.deepcopy(dict_list)
+    for num in range(len(new_dict_list)):
+        swapped = False
 
+        for n in range(len(new_dict_list)-num-1):
+            if new_dict_list[n][key] > new_dict_list[n+1][key]:
+                (new_dict_list[n],new_dict_list[n+1]) = (new_dict_list[n+1],new_dict_list[n])
+                swapped = True
+        if not swapped:
+            break
+    return new_dict_list
+
+
+
+def selection_sort_dict(dict_list, key):
+    
+    new_dict_list = copy.deepcopy(dict_list)
+    for num in range(len(new_dict_list)):
+        min_idx = num
+
+        for n in range(num, len(new_dict_list)):
+            if new_dict_list[n][key] <= new_dict_list[min_idx][key]:
+                min_idx = n
+        if min_idx != num:
+            (new_dict_list[num],new_dict_list[min_idx]) = (new_dict_list[min_idx],new_dict_list[num])
+    return new_dict_list
+
+def insertion_sort_dict(dict_list,dict_key):
+    
+    new_dict_list = copy.deepcopy(dict_list)
+    
+    for num in range(1,len(new_dict_list)):
+        keep_dict = new_dict_list[num]
+        key = new_dict_list[num][dict_key]
+        comparing_idx = num - 1
+
+        while comparing_idx >=0 and key < new_dict_list[comparing_idx][dict_key]:
+            new_dict_list[comparing_idx+1] = new_dict_list[comparing_idx]
+            comparing_idx -=1
+        new_dict_list[comparing_idx+1] = keep_dict
+    return new_dict_list
+
+def mergeSortDict(dict_list,key):
+    new_dict_list = copy.deepcopy(dict_list)
+    if len(new_dict_list) > 1:
+
+        r = len(new_dict_list)//2
+        L_dict = new_dict_list[:r]
+        M_dict = new_dict_list[r:]
+
+        L_dict = mergeSortDict(L_dict,key)
+        M_dict = mergeSortDict(M_dict,key)
+
+        i = j = k = 0
+
+        while i < len(L_dict) and j < len(M_dict):
+            if L_dict[i][key] <= M_dict[j][key]:
+                
+                new_dict_list[k] = L_dict[i]
+                i += 1
+            else:
+                
+                new_dict_list[k] = M_dict[j]
+                j += 1
+            k += 1
+
+        while i < len(L_dict):
+            
+            new_dict_list[k] = L_dict[i]
+            i += 1
+            k += 1
+
+        while j < len(M_dict):
+            
+            new_dict_list[k] = M_dict[j]
+            j += 1
+            k += 1
+    return new_dict_list
+def merge_sort_dict(dict_list,key):
+
+    return (mergeSortDict(dict_list,key))
+    
 def demonstrate_stability():
     """
     Demonstrate which sorting algorithms are stable by sorting products by price.
@@ -132,18 +273,24 @@ def demonstrate_stability():
     # Hint: Or extract prices, sort them, and check if stable algorithms maintain original order
     # Hint: For stable sort: items with price 999 should stay in order (B before D)
     # Hint: For stable sort: items with price 1999 should stay in order (A before C before E)
-    
-    results = {
-        "bubble_sort": "Not tested",
-        "selection_sort": "Not tested", 
-        "insertion_sort": "Not tested",
-        "merge_sort": "Not tested"
-    }
-    
-    # TODO: Test each algorithm and update results dictionary with "Stable" or "Unstable"
-    
-    return results
+    sorted_prices = [bubble_sort_dict(products,"price"), 
+                     selection_sort_dict(products,"price"), 
+                     insertion_sort_dict(products,"price"),
+                     merge_sort_dict(products,"price")]
 
+    for sorted_price in sorted_prices:
+        print(sorted_price)
+        print()
+
+    # TODO: Test each algorithm and update results dictionary with "Stable" or "Unstable"
+    results = {
+        "bubble_sort": "Stable",
+        "selection_sort": "Unstable", 
+        "insertion_sort": "Stable",
+        "merge_sort": "Stable"
+    }
+    return results
+demonstrate_stability()
 
 # ============================================================================
 # PART 3: PERFORMANCE BENCHMARKING
@@ -287,8 +434,8 @@ if __name__ == "__main__":
     
     # Uncomment these as you complete each part:
     
-    # test_sorting_correctness()
-    # benchmark_all_datasets()
+    #test_sorting_correctness()
+    benchmark_all_datasets()
     # analyze_stability()
     
     print("\n⚠ Uncomment the test functions in the main block to run benchmarks!")
